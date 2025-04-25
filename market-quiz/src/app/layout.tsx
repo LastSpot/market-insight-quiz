@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { inter } from '@/ui/fonts';
+import { inter } from '@/components/ui/fonts';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: "Market Quiz",

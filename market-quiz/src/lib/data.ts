@@ -1,0 +1,103 @@
+import { GoogleGenAI } from "@google/genai";
+
+const genai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const model = "gemini-2.0-flash";
+
+const categories = [
+    "commodities", "equities", "currencies", "economic indicators",
+    "central bank policy", "interest rates", "emerging markets", "ETF flows"
+];
+
+const tones = [
+    "playful", "serious", "puzzling", "straightforward", "snarky"
+];
+
+const formats = [
+    "true/false", "short answer", "fill in the blank", "numerical response"
+];
+
+const timeframes = [
+    "today", "this week", "over the past month", "year-to-date", "since last quarter"
+];
+
+const regions = [
+    "United States", "Europe", "Asia", "Latin America", "Global markets"
+];
+
+let currentPrompt: string | null = null;
+let currentResponse: string | null = null;
+let currentFeedback: string | null = null;
+
+function sample(arr: string[]) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export async function generateMarketPrompt() {
+    const category = sample(categories);
+    const tone = sample(tones);
+    const format = sample(formats);
+    const timeframe = sample(timeframes);
+    const region = sample(regions);
+
+    const response = await genai.models.generateContent({
+        model: model,
+        contents: `
+            You're a market quizmaster with a ${tone} tone. 
+            Create a single-sentence finance quiz question in ${format} format. 
+            Focus on ${category} in the ${region} region, and base it on ${timeframe} market data or sentiment.
+            Do not include the answer. No markdown. Keep it concise and engaging.
+            Use current market dynamics as context.
+        `,
+        generationConfig: {
+            temperature: 0.9,
+            topP: 0.95,
+        },
+    })
+
+    currentPrompt = response.text || null;
+    return response.text;
+}
+
+export async function rateResponse(userResponse: string) {
+    const response = await genai.models.generateContent({
+        model: model,
+        contents: 
+        `
+            You are an expert financial tutor reviewing a student's quiz response.
+            Here is the quiz question: "${currentPrompt}"
+            Here is the student's answer: "${userResponse}"
+
+            Please do the following:
+            1. Start by directly addressing the student.
+            2. Tell them whether their answer is correct, partially correct, or incorrect.
+            3. Give a score out of 100 based on:
+            - factual accuracy (60 points)
+            - completeness (20 points)
+            - clarity and relevance (20 points)
+            4. Explain clearly why the score was given in a friendly but informative tone (3-5 sentences).
+            5. If their answer is wrong or incomplete, suggest how it could be improved.
+
+            Keep it conversational but formal. No markdown or technical formatting.
+        `,
+        generationConfig: {
+            temperature: 0.4,
+            topP: 0.9,
+            maxOutputTokens: 200,
+        },
+    })
+
+    currentFeedback = response.text || null;
+    return response.text;
+}
+
+export function getPrompt() {
+    return currentPrompt;
+}
+
+export function setResponse(response: string) {
+    currentResponse = response;
+}
+
+export function getResponse() {
+    return currentResponse;
+}

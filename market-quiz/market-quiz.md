@@ -14,4 +14,8 @@ The logic of the application will be as followed:
 
 # UI
 
-Dark theme, V0 inspired.
+Dark theme, V0 inspired. Using Magic UI, + Tailwind.
+
+# Next.js 15 Guide
+
+Use the best practices and keep everything separated for maintainbility and readibility.

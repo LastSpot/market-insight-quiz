@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# IMPORTANT
+
+# Always read market-quiz/market-quiz.md before writing any code
+
+# After adding ammajor feature or completing a milestone, update market-quiz.md
+
+# Document the entire schema in market-quiz.md
+
+
+# For new migrations, make sure to add them to the same file

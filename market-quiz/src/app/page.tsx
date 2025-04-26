@@ -9,7 +9,7 @@ export default function Home() {
       <main className="flex-grow py-4 sm:py-8">
         <div className="flex flex-col items-center justify-center min-h-[90vh] w-full overflow-x-hidden">
           <Suspense fallback={
-              <div className="text-center py-4 animate-pulse">Generating prompt...</div>
+              <div className="text-center py-4 animate-pulse font-bold text-4xl">Generating prompt...</div>
             }>
             <PromptDisplay />
           </Suspense>

@@ -1,6 +1,6 @@
 "use server";
 
-import { rateResponse, setResponse, getResponse } from "./data";
+import { rateResponse, setResponse, getFeedback as getStoredFeedback } from "./data";
 
 export async function submitResponse(response: string) {
     setResponse(response);
@@ -8,6 +8,6 @@ export async function submitResponse(response: string) {
 }
 
 export async function getFeedback() {
-    return getResponse();
+    return getStoredFeedback();
 }
 

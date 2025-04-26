@@ -1,25 +1,23 @@
-import Image from "next/image";
+// import Image from "next/image";
 import PromptDisplay from "@/components/prompt-display";
 import ResponseBox from "@/components/response-box";
-import Feedback from "@/components/feedback";
 import { Suspense } from "react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col h-screen">
-      <main className="">
-        <div className="flex flex-col items-center justify-center h-screen w-full">
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-grow py-4 sm:py-8">
+        <div className="flex flex-col items-center justify-center min-h-[90vh] w-full overflow-x-hidden">
           <Suspense fallback={
-              <div>Generating prompt...</div>
+              <div className="text-center py-4 animate-pulse">Generating prompt...</div>
             }>
             <PromptDisplay />
           </Suspense>
           <ResponseBox />
-          <Feedback />
         </div>
       </main>
-      <footer className="flex flex-wrap items-center justify-center">
-        <p className="font-bold">Footer</p>
+      <footer className="py-4 text-center text-xs text-gray-500">
+        <p>Market Insight Quiz © {new Date().getFullYear()}</p>
       </footer>
     </div>
   );

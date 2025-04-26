@@ -48,7 +48,7 @@ export async function generateMarketPrompt() {
             Do not include the answer. No markdown. Keep it concise and engaging.
             Use current market dynamics as context.
         `,
-        generationConfig: {
+        config: {
             temperature: 0.9,
             topP: 0.95,
         },
@@ -59,29 +59,34 @@ export async function generateMarketPrompt() {
 }
 
 export async function rateResponse(userResponse: string) {
+
+    if (!currentPrompt) {
+        return "No prompt available";
+    }
+
     const response = await genai.models.generateContent({
         model: model,
         contents: 
         `
-            You are an expert financial tutor reviewing a student's quiz response.
-            Here is the quiz question: "${currentPrompt}"
-            Here is the student's answer: "${userResponse}"
+            Here is a finance quiz question: "${currentPrompt}"
 
-            Please do the following:
-            1. Start by directly addressing the student.
-            2. Tell them whether their answer is correct, partially correct, or incorrect.
-            3. Give a score out of 100 based on:
-            - factual accuracy (60 points)
-            - completeness (20 points)
-            - clarity and relevance (20 points)
-            4. Explain clearly why the score was given in a friendly but informative tone (3-5 sentences).
-            5. If their answer is wrong or incomplete, suggest how it could be improved.
+            Here is the user's answer: "${userResponse}"
 
-            Keep it conversational but formal. No markdown or technical formatting.
+            Evaluate the response based on the following:
+            - Factual accuracy (60 points)
+            - Completeness (20 points)
+            - Clarity and relevance (20 points)
+
+            Give a final score out of 100.
+
+            Then explain the score using 3–5 concise sentences. Focus only on the logic and quality of the answer.
+            If the answer is incomplete or incorrect, explain what is missing or incorrect and suggest a better or more complete response.
+
+            Use a direct, professional tone. Do not use phrases like "Hello", "student", or "I give you a score of". Do not roleplay. Just analyze and score.
+            No markdown or formatting.
         `,
-        generationConfig: {
-            temperature: 0.4,
-            topP: 0.9,
+        config: {
+            temperature: 0.2,
             maxOutputTokens: 200,
         },
     })
@@ -100,4 +105,8 @@ export function setResponse(response: string) {
 
 export function getResponse() {
     return currentResponse;
+}
+
+export function getFeedback() {
+    return currentFeedback;
 }

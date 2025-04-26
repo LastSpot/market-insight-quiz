@@ -11,5 +11,7 @@ alwaysApply: true
 
 # Document the entire schema in market-quiz.md
 
-
 # For new migrations, make sure to add them to the same file
+
+
+# Do not fix what is not include in the instruction

@@ -1,13 +1,11 @@
 "use server";
 
-import { rateResponse, setResponse, getFeedback as getStoredFeedback } from "./data";
+import { generateMarketPrompt, rateResponse } from "./data";
 
-export async function submitResponse(response: string) {
-    setResponse(response);
-    return await rateResponse(response);
+export async function getGeneratedPrompt() {
+    return await generateMarketPrompt();
 }
 
-export async function getFeedback() {
-    return getStoredFeedback();
+export async function rateUserResponse(userResponse: string, prompt: string) {
+    return await rateResponse(userResponse, prompt);
 }
-

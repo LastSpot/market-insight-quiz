@@ -24,10 +24,6 @@ const regions = [
     "United States", "Europe", "Asia", "Latin America", "Global markets"
 ];
 
-let currentPrompt: string | null = null;
-let currentResponse: string | null = null;
-let currentFeedback: string | null = null;
-
 function sample(arr: string[]) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -50,25 +46,22 @@ export async function generateMarketPrompt() {
         `,
         config: {
             temperature: 0.9,
-            topP: 0.95,
         },
     })
 
-    currentPrompt = response.text || null;
-    return response.text;
+    return response.text || 'No prompt available';
 }
 
-export async function rateResponse(userResponse: string) {
-
-    if (!currentPrompt) {
-        return "No prompt available";
-    }
+export async function rateResponse(userResponse: string, prompt: string) {
+    if (!prompt || !userResponse) {
+        return 'No prompt or response provided';
+      }
 
     const response = await genai.models.generateContent({
         model: model,
         contents: 
         `
-            Here is a finance quiz question: "${currentPrompt}"
+            Here is a finance question: "${prompt}"
 
             Here is the user's answer: "${userResponse}"
 
@@ -83,7 +76,7 @@ export async function rateResponse(userResponse: string) {
             If the answer is incomplete or incorrect, explain what is missing or incorrect and suggest a better or more complete response.
 
             Use a direct, professional tone. Do not use phrases like "Hello", "student", or "I give you a score of". Do not roleplay. Just analyze and score.
-            No markdown or formatting.
+            No markdown or formatting, just plain text.
         `,
         config: {
             temperature: 0.2,
@@ -91,22 +84,5 @@ export async function rateResponse(userResponse: string) {
         },
     })
 
-    currentFeedback = response.text || null;
     return response.text;
-}
-
-export function getPrompt() {
-    return currentPrompt;
-}
-
-export function setResponse(response: string) {
-    currentResponse = response;
-}
-
-export function getResponse() {
-    return currentResponse;
-}
-
-export function getFeedback() {
-    return currentFeedback;
 }

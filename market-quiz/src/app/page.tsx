@@ -4,7 +4,9 @@ import { useState } from "react";
 import { TypingAnimation } from "@/components/magicui/typing-animation";
 import { Textarea } from "@/components/ui/textarea";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
+import { PromptLoader } from "@/components/magicui/prompt-loader";
 import { getGeneratedPrompt, rateUserResponse } from "@/lib/actions";
+import { Meteors } from "@/components/magicui/meteors";
 
 export default function Home() {
   const [prompt, setPrompt] = useState("");
@@ -12,9 +14,13 @@ export default function Home() {
   const [feedback, setFeedback] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isGeneratingPrompt, setIsGeneratingPrompt] = useState(false);
 
   const generatePrompt = async () => {
     setIsLoading(true);
+    setIsGeneratingPrompt(true);
+    setPrompt(""); // Clear prompt to show loading animation
+    
     try {
       const newPrompt = await getGeneratedPrompt();
       setPrompt(newPrompt);
@@ -25,6 +31,7 @@ export default function Home() {
       console.error("Error generating prompt:", error);
     } finally {
       setIsLoading(false);
+      setIsGeneratingPrompt(false);
     }
   };
 
@@ -46,11 +53,14 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <Meteors />
       <main className="flex-grow py-4 sm:py-8">
         <div className="flex flex-col items-center justify-center min-h-[90vh] w-full overflow-x-hidden gap-6">
           {/* Prompt Display Area */}
           <div className="w-fit max-w-[1000px] sm:px-6 text-wrap m-4 sm:m-8 p-3 sm:p-4 text-shadow-md rounded-lg">
-            {prompt ? (
+            {isGeneratingPrompt ? (
+              <PromptLoader />
+            ) : prompt ? (
               <TypingAnimation className="text-wrap items-center justify-center">{prompt}</TypingAnimation>
             ) : (
               <InteractiveHoverButton onClick={generatePrompt} disabled={isLoading}>
@@ -60,7 +70,7 @@ export default function Home() {
           </div>
 
           {/* User Response Area */}
-          {prompt && !isSubmitted && (
+          {prompt && !isSubmitted && !isGeneratingPrompt && (
             <div className="flex flex-col w-full max-w-[700px] px-4 sm:px-0 items-center justify-center gap-3 sm:gap-4">
               <Textarea
                 className="h-[120px] sm:h-[150px]"
@@ -80,7 +90,7 @@ export default function Home() {
           )}
 
           {/* Feedback Area */}
-          {isSubmitted && feedback && (
+          {isSubmitted && feedback && !isGeneratingPrompt && (
             <div className="w-full max-w-[700px] px-4 sm:px-0">
               <div className="p-4 rounded-lg">
                 <TypingAnimation className="font-semibold text-wrap text-2xl">{feedback}</TypingAnimation>
@@ -94,8 +104,8 @@ export default function Home() {
           )}
         </div>
       </main>
-      <footer className="py-4 text-center text-xs text-gray-500">
-        <p>Market Insight Quiz © {new Date().getFullYear()}</p>
+      <footer className="flex flex-col py-4 text-center text-xs text-gray-500">
+        <p className="m-auto">Market Insight Quiz © {new Date().getFullYear()}</p>
       </footer>
     </div>
   );

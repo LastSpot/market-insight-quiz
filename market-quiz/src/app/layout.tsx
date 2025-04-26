@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { inter } from '@/components/ui/fonts';
+import { Meteors } from "@/components/magicui/meteors";
 import './globals.css';
 
 export const metadata: Metadata = {

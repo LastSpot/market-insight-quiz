@@ -52,10 +52,14 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Meteors />
-      <main className="flex-grow py-4 sm:py-8">
-        <div className="flex flex-col items-center justify-center min-h-[90vh] w-full overflow-x-hidden gap-6">
+    <div className="flex flex-col min-h-screen relative overflow-hidden">
+      {/* Meteors positioned absolutely to not affect layout */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <Meteors number={15} />
+      </div>
+      
+      <main className="flex-grow py-4 sm:py-8 relative z-10">
+        <div className="flex flex-col items-center justify-center min-h-[90vh] w-full gap-6">
           {/* Prompt Display Area */}
           <div className="w-fit max-w-[1000px] sm:px-6 text-wrap m-4 sm:m-8 p-3 sm:p-4 text-shadow-md rounded-lg">
             {isGeneratingPrompt ? (
@@ -104,7 +108,7 @@ export default function Home() {
           )}
         </div>
       </main>
-      <footer className="flex flex-col py-4 text-center text-xs text-gray-500">
+      <footer className="flex flex-col py-4 text-center text-xs text-gray-500 relative z-10">
         <p className="m-auto">Market Insight Quiz © {new Date().getFullYear()}</p>
       </footer>
     </div>

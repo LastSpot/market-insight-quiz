@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { inter } from '@/components/ui/fonts';
-import { Meteors } from "@/components/magicui/meteors";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -15,6 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <GoogleAnalytics />
+      </head>
       <body className={`${inter.className} antialiased`}>
         {children}
       </body>
